@@ -1,0 +1,61 @@
+﻿@using CommonBase.Extensions
+@using QnSHolidayCalendar.AspMvc.Extensions
+@model QnSHolidayCalendar.AspMvc.Models.Business.App.HolidayEntry
+
+@{
+    ViewData["Title"] = "Create";
+
+    var holidayOptions = EnumExtensions.ToList<QnSHolidayCalendar.Contracts.Modules.App.HolidayType>();
+    var repeatOptions = EnumExtensions.ToList<QnSHolidayCalendar.Contracts.Modules.App.RepeatType>();
+}
+
+<h1>Create</h1>
+
+<h4>HolidayEntry</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="From" class="control-label"></label>
+                <input asp-for="From" type="date" class="form-control" />
+                <span asp-validation-for="From" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="To" class="control-label"></label>
+                <input asp-for="To" type="date" class="form-control" />
+                <span asp-validation-for="To" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HolidayType" class="control-label"></label>
+                @Html.ToSelect("form-control", string.Empty, "HolidayType", holidayOptions, Model.HolidayType)
+            </div>
+            <div class="form-group">
+                <label asp-for="RepeatType" class="control-label"></label>
+                @Html.ToSelect("form-control", string.Empty, "RepeatType", repeatOptions, Model.RepeatType)
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-controller="Home">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

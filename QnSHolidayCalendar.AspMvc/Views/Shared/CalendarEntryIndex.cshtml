@@ -1,0 +1,92 @@
+﻿@using Microsoft.AspNetCore.Mvc.Razor
+@using QnSHolidayCalendar.AspMvc.Modules.Session
+@model IEnumerable<QnSHolidayCalendar.AspMvc.Models.Persistence.App.CalendarEntry>
+@*Begin:Header*@
+@{
+#if DEBUG
+    string currentView = ((RazorView)ViewContext.View).Path;
+    string beginLabel = $"<!--View Begin: '{currentView}'-->";
+    @Html.Raw(beginLabel)
+#endif
+    SessionWrapper sessionWrapper = new SessionWrapper(Context.Session);
+    Func<string, string> translate = sessionWrapper.Translate;
+}
+
+@{
+    string title = translate("Holiday");
+
+    ViewData["Title"] = title;
+}
+
+<h1>@title</h1>
+
+@if (sessionWrapper.IsAuthenticated)
+{
+    <p>
+        <a asp-action="Create" asp-controller="HolidayEntry" class="btn btn-outline-secondary">@translate("Create New")</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @if (item.Date.DayOfWeek == DayOfWeek.Sunday || item.Type == QnSHolidayCalendar.Contracts.Modules.App.HolidayType.Public)
+                {
+                    <td style="color: red;">
+                        @Html.DisplayFor(modelItem => item.ViewDate)
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ViewDate)
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @if (sessionWrapper.IsAuthenticated)
+                    {
+                        @Html.ActionLink("Edit", "Edit", "CalendarEntry", new { id = item.Id })
+                        <span>|</span>
+                        @Html.ActionLink("Delete", "Delete", "CalendarEntry", new { id = item.Id });
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@*Begin:Footer*@
+@{
+#if DEBUG
+    string endLabel = $"<!--View Ende: '{currentView}'-->";
+
+    @Html.Raw(endLabel)
+#endif
+}
+@*End:Footer*@
