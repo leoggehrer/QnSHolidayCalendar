@@ -68,7 +68,7 @@ namespace QnSHolidayCalendar.AspMvc.Controllers
 
                 if (model.DeleteGroup)
                 {
-                    var qry = await ctrl.QueryPageListAsync($"{nameof(model.HolidayGroup)}={model.HolidayGroup}", 0, ctrl.MaxPageSize);
+                    var qry = await ctrl.QueryAllAsync($"{nameof(model.HolidayGroup)}={model.HolidayGroup}");
 
                     foreach (var item in qry)
                     {

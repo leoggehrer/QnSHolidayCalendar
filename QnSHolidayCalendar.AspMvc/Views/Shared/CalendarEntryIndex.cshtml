@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Mvc.Razor
+﻿@using System.Linq;
+@using Microsoft.AspNetCore.Mvc.Razor
 @using QnSHolidayCalendar.AspMvc.Modules.Session
 @model IEnumerable<QnSHolidayCalendar.AspMvc.Models.Persistence.App.CalendarEntry>
 @*Begin:Header*@
@@ -14,7 +15,27 @@
 
 @{
     string title = translate("Holiday");
+    int[] years = Model.GroupBy(e => e.Date.Year).Select(e => e.Key).ToArray();
+    int curYear = 0,curIdx = 0, loIdx = 0, upIdx = 0, offset = 7;
 
+    if (sessionWrapper.HasValue("year"))
+    {
+        curYear = sessionWrapper.GetIntValue("year");
+    }
+    else if (years.Length > 0)
+    {
+        curYear = years[0];
+    }
+    for (int i = 0; i < years.Length; i++)
+    {
+        if (curYear == years[i])
+        {
+            curIdx = i;
+            loIdx = (i / offset) * offset;
+            upIdx = loIdx + offset;
+        }
+    }
+    upIdx = upIdx > years.Length - 1 ? years.Length - 1 : upIdx;
     ViewData["Title"] = title;
 }
 
@@ -26,6 +47,26 @@
         <a asp-action="Create" asp-controller="HolidayEntry" class="btn btn-outline-secondary">@translate("Create New")</a>
     </p>
 }
+
+@if (years.Length > 1)
+{
+<div class="d-flex justify-content-center">
+    <div class="p-0"><a class="page-link" style="background-color: lightblue;" href="/Home/IndexBy?year=@years[(curIdx > 0 ? curIdx - 1 : curIdx)]">Prev</a></div>
+    @for (int i = loIdx; i <= upIdx; i++)
+    {
+        if (curYear == years[i])
+        {
+            <div class="p-0"><a class="page-link" style="background-color: lightgray;" href="/Home/IndexBy?year=@years[i]">@years[i]</a></div>
+        }
+        else
+        {
+            <div class="p-0"><a class="page-link" href="/Home/IndexBy?year=@years[i]">@years[i]</a></div>
+        }
+    }
+    <div class="p-0"><a class="page-link" style="background-color: lightblue;" href="/Home/IndexBy?year=@years[(curIdx < years.Length - 1 ? curIdx + 1 : curIdx)]">Next</a></div>
+</div>
+}
+<p></p>
 <table class="table">
     <thead>
         <tr>
@@ -45,7 +86,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Where(e => e.Date.Year == curYear))
         {
             <tr>
                 @if (item.Date.DayOfWeek == DayOfWeek.Sunday || item.Type == QnSHolidayCalendar.Contracts.Modules.App.HolidayType.Public)

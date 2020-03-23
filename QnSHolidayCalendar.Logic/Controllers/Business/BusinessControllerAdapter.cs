@@ -60,7 +60,19 @@ namespace QnSHolidayCalendar.Logic.Controllers.Business
 		{
 			throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().Name}!");
 		}
+		public virtual Task<int> CountByAsync(string predicate)
+		{
+			throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().Name}!");
+		}
 
+		public virtual Task<I> GetByIdAsync(int id)
+		{
+			throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().Name}!");
+		}
+		public virtual Task<IQueryable<I>> GetPageListAsync(int pageIndex, int pageSize)
+		{
+			throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().Name}!");
+		}
 		public virtual Task<IQueryable<I>> GetAllAsync()
 		{
 			throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().Name}!");
@@ -70,16 +82,11 @@ namespace QnSHolidayCalendar.Logic.Controllers.Business
 		{
 			throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().Name}!");
 		}
-
-		public virtual Task<IQueryable<I>> GetPageListAsync(int pageIndex, int pageSize)
+		public virtual Task<IQueryable<I>> QueryAllAsync(string predicate)
 		{
 			throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().Name}!");
 		}
 
-		public virtual Task<I> GetByIdAsync(int id)
-		{
-			throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().Name}!");
-		}
 
 		public virtual Task<I> CreateAsync()
 		{

@@ -41,6 +41,15 @@ namespace QnSHolidayCalendar.AspMvc.Controllers
 
             return View("CalendarEntryIndex", entities.Select(e => ConvertTo(e)).OrderByDescending(e => e.Date));
         }
+        [ActionName("IndexBy")]
+        public async Task<IActionResult> IndexByAsync(int year)
+        {
+            SessionWrapper.SetIntValue("year", year);
+            using var ctrl = Factory.Create<Contracts.Persistence.App.ICalendarEntry>();
+            var entities = await ctrl.GetAllAsync();
+
+            return View("CalendarEntryIndex", entities.Select(e => ConvertTo(e)).OrderByDescending(e => e.Date));
+        }
         [ActionName("Create")]
         public IActionResult Create()
         {

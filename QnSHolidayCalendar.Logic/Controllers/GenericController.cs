@@ -75,7 +75,7 @@ namespace QnSHolidayCalendar.Logic.Controllers
             return result;
         }
         #region Async-Methods
-        public Task<int> CountAsync()
+        public virtual Task<int> CountAsync()
         {
             CheckAuthorization(GetType(), MethodBase.GetCurrentMethod());
 
@@ -84,6 +84,16 @@ namespace QnSHolidayCalendar.Logic.Controllers
         internal Task<int> ExecuteCountAsync()
         {
             return Context.CountAsync<I, E>();
+        }
+        public virtual Task<int> CountByAsync(string predicat)
+        {
+            CheckAuthorization(GetType(), MethodBase.GetCurrentMethod());
+
+            return ExecuteCountByAsync(predicat);
+        }
+        internal Task<int> ExecuteCountByAsync(string predicate)
+        {
+            return Context.CountByAsync<I, E>(predicate);
         }
 
         public virtual Task<I> GetByIdAsync(int id)
@@ -95,6 +105,20 @@ namespace QnSHolidayCalendar.Logic.Controllers
         internal virtual Task<I> ExecuteGetByIdAsync(int id)
         {
             return Task.Run<I>(() => Set().SingleOrDefault(i => i.Id == id));
+        }
+
+        public virtual Task<IQueryable<I>> GetPageListAsync(int pageIndex, int pageSize)
+        {
+            CheckAuthorization(GetType(), MethodBase.GetCurrentMethod());
+
+            return ExecuteGetPageListAsync(pageIndex, pageSize);
+        }
+        internal virtual Task<IQueryable<I>> ExecuteGetPageListAsync(int pageIndex, int pageSize)
+        {
+            if (pageSize < 1 && pageSize > MaxPageSize)
+                throw new LogicException(ErrorType.InvalidPageSize);
+
+            return Task.FromResult<IQueryable<I>>(Set().Skip(pageIndex * pageSize).Take(pageSize));
         }
 
         public virtual Task<IQueryable<I>> GetAllAsync()
@@ -118,20 +142,6 @@ namespace QnSHolidayCalendar.Logic.Controllers
             return result.AsQueryable();
         }
 
-        public virtual Task<IQueryable<I>> GetPageListAsync(int pageIndex, int pageSize)
-        {
-            CheckAuthorization(GetType(), MethodBase.GetCurrentMethod());
-
-            return ExecuteGetPageListAsync(pageIndex, pageSize);
-        }
-        internal virtual Task<IQueryable<I>> ExecuteGetPageListAsync(int pageIndex, int pageSize)
-        {
-            if (pageSize < 1 && pageSize > MaxPageSize)
-                throw new LogicException(ErrorType.InvalidPageSize);
-
-            return Task.FromResult<IQueryable<I>>(Set().Skip(pageIndex * pageSize).Take(pageSize));
-        }
-
         public virtual Task<IQueryable<I>> QueryPageListAsync(string predicate, int pageIndex, int pageSize)
         {
             CheckAuthorization(GetType(), MethodBase.GetCurrentMethod());
@@ -147,6 +157,27 @@ namespace QnSHolidayCalendar.Logic.Controllers
                      .Where(predicate)
                      .Skip(pageIndex * pageSize)
                      .Take(pageSize));
+        }
+
+        public virtual Task<IQueryable<I>> QueryAllAsync(string predicate)
+        {
+            CheckAuthorization(GetType(), MethodBase.GetCurrentMethod());
+
+            return ExecuteQueryAllAsync(predicate);
+        }
+        internal virtual async Task<IQueryable<I>> ExecuteQueryAllAsync(string predicate)
+        {
+            int idx = 0, qryCount = 0;
+            List<I> result = new List<I>();
+
+            do
+            {
+                var qry = await ExecuteQueryPageListAsync(predicate, idx++, MaxPageSize).ConfigureAwait(false);
+
+                qryCount = qry.Count();
+                result.AddRange(qry);
+            } while (qryCount == MaxPageSize);
+            return result.AsQueryable();
         }
 
         public virtual Task<I> CreateAsync()

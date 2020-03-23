@@ -11,9 +11,9 @@ using QnSHolidayCalendar.Adapters.Exceptions;
 
 namespace QnSHolidayCalendar.Adapters.Service
 {
-    partial class GenericServiceAdapter<TContract, TEntity> : ServiceAdapterObject, Contracts.Client.IAdapterAccess<TContract>
+    partial class GenericServiceAdapter<TContract, TModel> : ServiceAdapterObject, Contracts.Client.IAdapterAccess<TContract>
         where TContract : Contracts.IIdentifiable
-        where TEntity : TContract, Contracts.ICopyable<TContract>, new()
+        where TModel : TContract, Contracts.ICopyable<TContract>, new()
     {
         static GenericServiceAdapter()
         {
@@ -92,6 +92,26 @@ namespace QnSHolidayCalendar.Adapters.Service
                 throw new AdapterException((int)response.StatusCode, errorMessage);
             }
         }
+        public async Task<int> CountByAsync(string predicate)
+        {
+            using var client = GetClient(BaseUri);
+            HttpResponseMessage response = await client.GetAsync($"{ExtUri}/CountBy/{predicate}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                string stringData = await response.Content.ReadAsStringAsync();
+
+                return Convert.ToInt32(stringData);
+            }
+            else
+            {
+                string stringData = await response.Content.ReadAsStringAsync();
+                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+
+                System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
+                throw new AdapterException((int)response.StatusCode, errorMessage);
+            }
+        }
 
         public async Task<TContract> GetByIdAsync(int id)
         {
@@ -103,29 +123,7 @@ namespace QnSHolidayCalendar.Adapters.Service
                 {
                     var contentData = await response.Content.ReadAsStreamAsync();
 
-                    return await JsonSerializer.DeserializeAsync<TEntity>(contentData, DeserializerOptions);
-                }
-                else
-                {
-                    string stringData = await response.Content.ReadAsStringAsync();
-                    string errorMessage = $"{response.ReasonPhrase}: {stringData}";
-
-                    System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
-                    throw new AdapterException((int)response.StatusCode, errorMessage);
-                }
-            }
-        }
-        public async Task<IEnumerable<TContract>> GetAllAsync()
-        {
-            using (var client = GetClient(BaseUri))
-            {
-                HttpResponseMessage response = await client.GetAsync(ExtUri + "/Get");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var contentData = await response.Content.ReadAsStreamAsync();
-
-                    return await JsonSerializer.DeserializeAsync<TEntity[]>(contentData, DeserializerOptions) as IEnumerable<TContract>;
+                    return await JsonSerializer.DeserializeAsync<TModel>(contentData, DeserializerOptions);
                 }
                 else
                 {
@@ -147,7 +145,7 @@ namespace QnSHolidayCalendar.Adapters.Service
                 {
                     var contentData = await response.Content.ReadAsStreamAsync();
 
-                    return await JsonSerializer.DeserializeAsync<TEntity[]>(contentData, DeserializerOptions) as IEnumerable<TContract>;
+                    return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions) as IEnumerable<TContract>;
                 }
                 else
                 {
@@ -159,17 +157,62 @@ namespace QnSHolidayCalendar.Adapters.Service
                 }
             }
         }
-        public async Task<IEnumerable<TContract>> QueryPageListAsync(string predicate, int pageIndex, int pageSize)
+        public async Task<IEnumerable<TContract>> GetAllAsync()
         {
             using (var client = GetClient(BaseUri))
             {
-                HttpResponseMessage response = await client.GetAsync($"{ExtUri}/Get/{predicate}/{pageIndex}/{pageSize}");
+                HttpResponseMessage response = await client.GetAsync($"{ExtUri}/Get");
 
                 if (response.IsSuccessStatusCode)
                 {
                     var contentData = await response.Content.ReadAsStreamAsync();
 
-                    return await JsonSerializer.DeserializeAsync<TEntity[]>(contentData, DeserializerOptions) as IEnumerable<TContract>;
+                    return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions) as IEnumerable<TContract>;
+                }
+                else
+                {
+                    string stringData = await response.Content.ReadAsStringAsync();
+                    string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+
+                    System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
+                    throw new AdapterException((int)response.StatusCode, errorMessage);
+                }
+            }
+        }
+
+        public async Task<IEnumerable<TContract>> QueryPageListAsync(string predicate, int pageIndex, int pageSize)
+        {
+            using (var client = GetClient(BaseUri))
+            {
+                HttpResponseMessage response = await client.GetAsync($"{ExtUri}/Query/{predicate}/{pageIndex}/{pageSize}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var contentData = await response.Content.ReadAsStreamAsync();
+
+                    return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions) as IEnumerable<TContract>;
+                }
+                else
+                {
+                    string stringData = await response.Content.ReadAsStringAsync();
+                    string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+
+                    System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
+                    throw new AdapterException((int)response.StatusCode, errorMessage);
+                }
+            }
+        }
+        public async Task<IEnumerable<TContract>> QueryAllAsync(string predicate)
+        {
+            using (var client = GetClient(BaseUri))
+            {
+                HttpResponseMessage response = await client.GetAsync($"{ExtUri}/Query/{predicate}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var contentData = await response.Content.ReadAsStreamAsync();
+
+                    return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions) as IEnumerable<TContract>;
                 }
                 else
                 {
@@ -192,7 +235,7 @@ namespace QnSHolidayCalendar.Adapters.Service
                 {
                     var contentData = await response.Content.ReadAsStreamAsync();
 
-                    return await JsonSerializer.DeserializeAsync<TEntity>(contentData, DeserializerOptions);
+                    return await JsonSerializer.DeserializeAsync<TModel>(contentData, DeserializerOptions);
                 }
                 else
                 {
@@ -217,7 +260,7 @@ namespace QnSHolidayCalendar.Adapters.Service
                 {
                     var resultData = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-                    return await JsonSerializer.DeserializeAsync<TEntity>(resultData, DeserializerOptions).ConfigureAwait(false);
+                    return await JsonSerializer.DeserializeAsync<TModel>(resultData, DeserializerOptions).ConfigureAwait(false);
                 }
                 else
                 {

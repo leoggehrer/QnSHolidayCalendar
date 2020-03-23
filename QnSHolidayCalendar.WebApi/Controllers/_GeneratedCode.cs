@@ -19,25 +19,35 @@ namespace QnSHolidayCalendar.WebApi.Controllers
 		{
 			return CountAsync();
 		}
-		[HttpGet("/api/[controller]/Get")]
-		public Task<IEnumerable<Model>> GetAsync()
+		[HttpGet("/api/[controller]/CountBy/{predicate}")]
+		public Task<int> GetCountByAsync(string predicate)
 		{
-			return GetModelsAsync();
+			return CountByAsync(predicate);
+		}
+		[HttpGet("/api/[controller]/Get/{id}")]
+		public Task<Model> GetAsync(int id)
+		{
+			return GetModelByIdAsync(id);
 		}
 		[HttpGet("/api/[controller]/Get/{index}/{size}")]
 		public Task<IEnumerable<Model>> GetPageListAsync(int index, int size)
 		{
 			return GetPageModelsAsync(index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{index}/{size}")]
+		[HttpGet("/api/[controller]/Get")]
+		public Task<IEnumerable<Model>> GetAsync()
+		{
+			return GetAllModelsAsync();
+		}
+		[HttpGet("/api/[controller]/Query/{predicate}/{index}/{size}")]
 		public Task<IEnumerable<Model>> QueryPageListAsync(string predicate, int index, int size)
 		{
 			return QueryPageModelsAsync(predicate, index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{id}")]
-		public Task<Model> GetAsync(int id)
+		[HttpGet("/api/[controller]/Query/{predicate}")]
+		public Task<IEnumerable<Model>> QueryAllAsync(string predicate)
 		{
-			return GetModelByIdAsync(id);
+			return QueryAllModelsAsync(predicate);
 		}
 		[HttpGet("/api/[controller]/Create")]
 		public Task<Model> GetCreateAsync(int id)
@@ -82,25 +92,35 @@ namespace QnSHolidayCalendar.WebApi.Controllers
 		{
 			return CountAsync();
 		}
-		[HttpGet("/api/[controller]/Get")]
-		public Task<IEnumerable<Model>> GetAsync()
+		[HttpGet("/api/[controller]/CountBy/{predicate}")]
+		public Task<int> GetCountByAsync(string predicate)
 		{
-			return GetModelsAsync();
+			return CountByAsync(predicate);
+		}
+		[HttpGet("/api/[controller]/Get/{id}")]
+		public Task<Model> GetAsync(int id)
+		{
+			return GetModelByIdAsync(id);
 		}
 		[HttpGet("/api/[controller]/Get/{index}/{size}")]
 		public Task<IEnumerable<Model>> GetPageListAsync(int index, int size)
 		{
 			return GetPageModelsAsync(index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{index}/{size}")]
+		[HttpGet("/api/[controller]/Get")]
+		public Task<IEnumerable<Model>> GetAsync()
+		{
+			return GetAllModelsAsync();
+		}
+		[HttpGet("/api/[controller]/Query/{predicate}/{index}/{size}")]
 		public Task<IEnumerable<Model>> QueryPageListAsync(string predicate, int index, int size)
 		{
 			return QueryPageModelsAsync(predicate, index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{id}")]
-		public Task<Model> GetAsync(int id)
+		[HttpGet("/api/[controller]/Query/{predicate}")]
+		public Task<IEnumerable<Model>> QueryAllAsync(string predicate)
 		{
-			return GetModelByIdAsync(id);
+			return QueryAllModelsAsync(predicate);
 		}
 		[HttpGet("/api/[controller]/Create")]
 		public Task<Model> GetCreateAsync(int id)
@@ -145,25 +165,35 @@ namespace QnSHolidayCalendar.WebApi.Controllers
 		{
 			return CountAsync();
 		}
-		[HttpGet("/api/[controller]/Get")]
-		public Task<IEnumerable<Model>> GetAsync()
+		[HttpGet("/api/[controller]/CountBy/{predicate}")]
+		public Task<int> GetCountByAsync(string predicate)
 		{
-			return GetModelsAsync();
+			return CountByAsync(predicate);
+		}
+		[HttpGet("/api/[controller]/Get/{id}")]
+		public Task<Model> GetAsync(int id)
+		{
+			return GetModelByIdAsync(id);
 		}
 		[HttpGet("/api/[controller]/Get/{index}/{size}")]
 		public Task<IEnumerable<Model>> GetPageListAsync(int index, int size)
 		{
 			return GetPageModelsAsync(index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{index}/{size}")]
+		[HttpGet("/api/[controller]/Get")]
+		public Task<IEnumerable<Model>> GetAsync()
+		{
+			return GetAllModelsAsync();
+		}
+		[HttpGet("/api/[controller]/Query/{predicate}/{index}/{size}")]
 		public Task<IEnumerable<Model>> QueryPageListAsync(string predicate, int index, int size)
 		{
 			return QueryPageModelsAsync(predicate, index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{id}")]
-		public Task<Model> GetAsync(int id)
+		[HttpGet("/api/[controller]/Query/{predicate}")]
+		public Task<IEnumerable<Model>> QueryAllAsync(string predicate)
 		{
-			return GetModelByIdAsync(id);
+			return QueryAllModelsAsync(predicate);
 		}
 		[HttpGet("/api/[controller]/Create")]
 		public Task<Model> GetCreateAsync(int id)
@@ -208,25 +238,35 @@ namespace QnSHolidayCalendar.WebApi.Controllers
 		{
 			return CountAsync();
 		}
-		[HttpGet("/api/[controller]/Get")]
-		public Task<IEnumerable<Model>> GetAsync()
+		[HttpGet("/api/[controller]/CountBy/{predicate}")]
+		public Task<int> GetCountByAsync(string predicate)
 		{
-			return GetModelsAsync();
+			return CountByAsync(predicate);
+		}
+		[HttpGet("/api/[controller]/Get/{id}")]
+		public Task<Model> GetAsync(int id)
+		{
+			return GetModelByIdAsync(id);
 		}
 		[HttpGet("/api/[controller]/Get/{index}/{size}")]
 		public Task<IEnumerable<Model>> GetPageListAsync(int index, int size)
 		{
 			return GetPageModelsAsync(index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{index}/{size}")]
+		[HttpGet("/api/[controller]/Get")]
+		public Task<IEnumerable<Model>> GetAsync()
+		{
+			return GetAllModelsAsync();
+		}
+		[HttpGet("/api/[controller]/Query/{predicate}/{index}/{size}")]
 		public Task<IEnumerable<Model>> QueryPageListAsync(string predicate, int index, int size)
 		{
 			return QueryPageModelsAsync(predicate, index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{id}")]
-		public Task<Model> GetAsync(int id)
+		[HttpGet("/api/[controller]/Query/{predicate}")]
+		public Task<IEnumerable<Model>> QueryAllAsync(string predicate)
 		{
-			return GetModelByIdAsync(id);
+			return QueryAllModelsAsync(predicate);
 		}
 		[HttpGet("/api/[controller]/Create")]
 		public Task<Model> GetCreateAsync(int id)
@@ -271,25 +311,35 @@ namespace QnSHolidayCalendar.WebApi.Controllers
 		{
 			return CountAsync();
 		}
-		[HttpGet("/api/[controller]/Get")]
-		public Task<IEnumerable<Model>> GetAsync()
+		[HttpGet("/api/[controller]/CountBy/{predicate}")]
+		public Task<int> GetCountByAsync(string predicate)
 		{
-			return GetModelsAsync();
+			return CountByAsync(predicate);
+		}
+		[HttpGet("/api/[controller]/Get/{id}")]
+		public Task<Model> GetAsync(int id)
+		{
+			return GetModelByIdAsync(id);
 		}
 		[HttpGet("/api/[controller]/Get/{index}/{size}")]
 		public Task<IEnumerable<Model>> GetPageListAsync(int index, int size)
 		{
 			return GetPageModelsAsync(index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{index}/{size}")]
+		[HttpGet("/api/[controller]/Get")]
+		public Task<IEnumerable<Model>> GetAsync()
+		{
+			return GetAllModelsAsync();
+		}
+		[HttpGet("/api/[controller]/Query/{predicate}/{index}/{size}")]
 		public Task<IEnumerable<Model>> QueryPageListAsync(string predicate, int index, int size)
 		{
 			return QueryPageModelsAsync(predicate, index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{id}")]
-		public Task<Model> GetAsync(int id)
+		[HttpGet("/api/[controller]/Query/{predicate}")]
+		public Task<IEnumerable<Model>> QueryAllAsync(string predicate)
 		{
-			return GetModelByIdAsync(id);
+			return QueryAllModelsAsync(predicate);
 		}
 		[HttpGet("/api/[controller]/Create")]
 		public Task<Model> GetCreateAsync(int id)
@@ -334,25 +384,35 @@ namespace QnSHolidayCalendar.WebApi.Controllers
 		{
 			return CountAsync();
 		}
-		[HttpGet("/api/[controller]/Get")]
-		public Task<IEnumerable<Model>> GetAsync()
+		[HttpGet("/api/[controller]/CountBy/{predicate}")]
+		public Task<int> GetCountByAsync(string predicate)
 		{
-			return GetModelsAsync();
+			return CountByAsync(predicate);
+		}
+		[HttpGet("/api/[controller]/Get/{id}")]
+		public Task<Model> GetAsync(int id)
+		{
+			return GetModelByIdAsync(id);
 		}
 		[HttpGet("/api/[controller]/Get/{index}/{size}")]
 		public Task<IEnumerable<Model>> GetPageListAsync(int index, int size)
 		{
 			return GetPageModelsAsync(index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{index}/{size}")]
+		[HttpGet("/api/[controller]/Get")]
+		public Task<IEnumerable<Model>> GetAsync()
+		{
+			return GetAllModelsAsync();
+		}
+		[HttpGet("/api/[controller]/Query/{predicate}/{index}/{size}")]
 		public Task<IEnumerable<Model>> QueryPageListAsync(string predicate, int index, int size)
 		{
 			return QueryPageModelsAsync(predicate, index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{id}")]
-		public Task<Model> GetAsync(int id)
+		[HttpGet("/api/[controller]/Query/{predicate}")]
+		public Task<IEnumerable<Model>> QueryAllAsync(string predicate)
 		{
-			return GetModelByIdAsync(id);
+			return QueryAllModelsAsync(predicate);
 		}
 		[HttpGet("/api/[controller]/Create")]
 		public Task<Model> GetCreateAsync(int id)
@@ -397,25 +457,35 @@ namespace QnSHolidayCalendar.WebApi.Controllers
 		{
 			return CountAsync();
 		}
-		[HttpGet("/api/[controller]/Get")]
-		public Task<IEnumerable<Model>> GetAsync()
+		[HttpGet("/api/[controller]/CountBy/{predicate}")]
+		public Task<int> GetCountByAsync(string predicate)
 		{
-			return GetModelsAsync();
+			return CountByAsync(predicate);
+		}
+		[HttpGet("/api/[controller]/Get/{id}")]
+		public Task<Model> GetAsync(int id)
+		{
+			return GetModelByIdAsync(id);
 		}
 		[HttpGet("/api/[controller]/Get/{index}/{size}")]
 		public Task<IEnumerable<Model>> GetPageListAsync(int index, int size)
 		{
 			return GetPageModelsAsync(index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{index}/{size}")]
+		[HttpGet("/api/[controller]/Get")]
+		public Task<IEnumerable<Model>> GetAsync()
+		{
+			return GetAllModelsAsync();
+		}
+		[HttpGet("/api/[controller]/Query/{predicate}/{index}/{size}")]
 		public Task<IEnumerable<Model>> QueryPageListAsync(string predicate, int index, int size)
 		{
 			return QueryPageModelsAsync(predicate, index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{id}")]
-		public Task<Model> GetAsync(int id)
+		[HttpGet("/api/[controller]/Query/{predicate}")]
+		public Task<IEnumerable<Model>> QueryAllAsync(string predicate)
 		{
-			return GetModelByIdAsync(id);
+			return QueryAllModelsAsync(predicate);
 		}
 		[HttpGet("/api/[controller]/Create")]
 		public Task<Model> GetCreateAsync(int id)
@@ -460,25 +530,35 @@ namespace QnSHolidayCalendar.WebApi.Controllers
 		{
 			return CountAsync();
 		}
-		[HttpGet("/api/[controller]/Get")]
-		public Task<IEnumerable<Model>> GetAsync()
+		[HttpGet("/api/[controller]/CountBy/{predicate}")]
+		public Task<int> GetCountByAsync(string predicate)
 		{
-			return GetModelsAsync();
+			return CountByAsync(predicate);
+		}
+		[HttpGet("/api/[controller]/Get/{id}")]
+		public Task<Model> GetAsync(int id)
+		{
+			return GetModelByIdAsync(id);
 		}
 		[HttpGet("/api/[controller]/Get/{index}/{size}")]
 		public Task<IEnumerable<Model>> GetPageListAsync(int index, int size)
 		{
 			return GetPageModelsAsync(index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{index}/{size}")]
+		[HttpGet("/api/[controller]/Get")]
+		public Task<IEnumerable<Model>> GetAsync()
+		{
+			return GetAllModelsAsync();
+		}
+		[HttpGet("/api/[controller]/Query/{predicate}/{index}/{size}")]
 		public Task<IEnumerable<Model>> QueryPageListAsync(string predicate, int index, int size)
 		{
 			return QueryPageModelsAsync(predicate, index, size);
 		}
-		[HttpGet("/api/[controller]/Get/{id}")]
-		public Task<Model> GetAsync(int id)
+		[HttpGet("/api/[controller]/Query/{predicate}")]
+		public Task<IEnumerable<Model>> QueryAllAsync(string predicate)
 		{
-			return GetModelByIdAsync(id);
+			return QueryAllModelsAsync(predicate);
 		}
 		[HttpGet("/api/[controller]/Create")]
 		public Task<Model> GetCreateAsync(int id)

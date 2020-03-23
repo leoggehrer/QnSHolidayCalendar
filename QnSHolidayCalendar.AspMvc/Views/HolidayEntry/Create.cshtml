@@ -1,20 +1,37 @@
-﻿@using CommonBase.Extensions
+﻿@using Microsoft.AspNetCore.Mvc.Razor
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using QnSHolidayCalendar.AspMvc.Modules.Session
+@using CommonBase.Extensions
 @using QnSHolidayCalendar.AspMvc.Extensions
 @model QnSHolidayCalendar.AspMvc.Models.Business.App.HolidayEntry
+@*Begin:Header*@
+@{
+#if DEBUG
+    string currentView = ((RazorView)ViewContext.View).Path;
+    string beginLabel = $"<!--View Begin: '{currentView}'-->";
+    @Html.Raw(beginLabel)
+#endif
+    SessionWrapper sessionWrapper = new SessionWrapper(Context.Session);
+    Func<string, string> translate = sessionWrapper.Translate;
+}
+@*End:Header*@
 
 @{
-    ViewData["Title"] = "Create";
+    string title = Model.Id == 0 ? "Create" : "Edit";
+
+    title = translate(title);
+    ViewData["Title"] = title;
 
     var holidayOptions = EnumExtensions.ToList<QnSHolidayCalendar.Contracts.Modules.App.HolidayType>();
     var repeatOptions = EnumExtensions.ToList<QnSHolidayCalendar.Contracts.Modules.App.RepeatType>();
 }
 
-<h1>Create</h1>
+<h1>@title</h1>
 
 <h4>HolidayEntry</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -45,16 +62,19 @@
                 <label asp-for="RepeatType" class="control-label"></label>
                 @Html.ToSelect("form-control", string.Empty, "RepeatType", repeatOptions, Model.RepeatType)
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { BackController = "Home" })
         </form>
     </div>
 </div>
+@*Begin:Footer*@
+@{
+#if DEBUG
+    string endLabel = $"<!--View Ende: '{currentView}'-->";
 
-<div>
-    <a asp-action="Index" asp-controller="Home">Back to List</a>
-</div>
+    @Html.Raw(endLabel)
+#endif
+}
+@*End:Footer*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

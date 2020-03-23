@@ -1,3 +1,5 @@
+//@QnSCodeCopy
+//MdStart
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,10 +24,31 @@ namespace QnSHolidayCalendar.Contracts.Client
         /// <returns>Number of entities in the collection.</returns>
         Task<int> CountAsync();
         /// <summary>
+        /// Returns the number of quantity in the collection based on a predicate.
+        /// </summary>
+        /// <param name="predicate">A string to test each element for a condition.</param>
+        /// <returns>Number of entities in the collection.</returns>
+        Task<int> CountByAsync(string predicate);
+
+        /// <summary>
+        /// Returns the element of type T with the identification of id.
+        /// </summary>
+        /// <param name="id">The identification.</param>
+        /// <returns>The element of the type T with the corresponding identification.</returns>
+        Task<T> GetByIdAsync(int id);
+        /// <summary>
+        /// Gets a subset of items from the repository.
+        /// </summary>
+        /// <param name="pageIndex">0 based page index.</param>
+        /// <param name="pageSize">The pagesize.</param>
+        /// <returns>Subset in accordance with the parameters.</returns>
+        Task<IEnumerable<T>> GetPageListAsync(int pageIndex, int pageSize);
+        /// <summary>
         /// Returns all interfaces of the entities in the collection.
         /// </summary>
         /// <returns>All interfaces of the entity collection.</returns>
         Task<IEnumerable<T>> GetAllAsync();
+
         /// <summary>
         /// Filters a sequence of values based on a predicate.
         /// </summary>
@@ -35,18 +58,12 @@ namespace QnSHolidayCalendar.Contracts.Client
         /// <returns>The filter result.</returns>
         Task<IEnumerable<T>> QueryPageListAsync(string predicate, int pageIndex, int pageSize);
         /// <summary>
-        /// Gets a subset of items from the repository.
+        /// Filters a sequence of values based on a predicate.
         /// </summary>
-        /// <param name="pageIndex">0 based page index.</param>
-        /// <param name="pageSize">The pagesize.</param>
-        /// <returns>Subset in accordance with the parameters.</returns>
-        Task<IEnumerable<T>> GetPageListAsync(int pageIndex, int pageSize);
-        /// <summary>
-        /// Returns the element of type T with the identification of id.
-        /// </summary>
-        /// <param name="id">The identification.</param>
-        /// <returns>The element of the type T with the corresponding identification.</returns>
-        Task<T> GetByIdAsync(int id);
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <returns>The filter result.</returns>
+        Task<IEnumerable<T>> QueryAllAsync(string predicate);
+
         /// <summary>
         /// Creates a new element of type T.
         /// </summary>
@@ -72,3 +89,4 @@ namespace QnSHolidayCalendar.Contracts.Client
         #endregion Async-Methods
     }
 }
+//MdEnd
