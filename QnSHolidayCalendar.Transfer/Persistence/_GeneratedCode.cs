@@ -675,6 +675,28 @@ namespace QnSHolidayCalendar.Transfer.Persistence.Account
 		partial void OnIdentityIdReading();
 		partial void OnIdentityIdChanging(ref bool handled, ref System.Int32 _identityId);
 		partial void OnIdentityIdChanged();
+		public System.Boolean IsRemoteAuth
+		{
+			get
+			{
+				OnIsRemoteAuthReading();
+				return _isRemoteAuth;
+			}
+			set
+			{
+				bool handled = false;
+				OnIsRemoteAuthChanging(ref handled, ref _isRemoteAuth);
+				if (handled == false)
+				{
+					this._isRemoteAuth = value;
+				}
+				OnIsRemoteAuthChanged();
+			}
+		}
+		private System.Boolean _isRemoteAuth;
+		partial void OnIsRemoteAuthReading();
+		partial void OnIsRemoteAuthChanging(ref bool handled, ref System.Boolean _isRemoteAuth);
+		partial void OnIsRemoteAuthChanged();
 		public System.String Origin
 		{
 			get
@@ -864,6 +886,7 @@ namespace QnSHolidayCalendar.Transfer.Persistence.Account
 				Id = other.Id;
 				Timestamp = other.Timestamp;
 				IdentityId = other.IdentityId;
+				IsRemoteAuth = other.IsRemoteAuth;
 				Origin = other.Origin;
 				Name = other.Name;
 				Email = other.Email;

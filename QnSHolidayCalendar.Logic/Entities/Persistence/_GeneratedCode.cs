@@ -809,6 +809,28 @@ namespace QnSHolidayCalendar.Logic.Entities.Persistence.Account
 		partial void OnIdentityIdReading();
 		partial void OnIdentityIdChanging(ref bool handled, ref System.Int32 _identityId);
 		partial void OnIdentityIdChanged();
+		public System.Boolean IsRemoteAuth
+		{
+			get
+			{
+				OnIsRemoteAuthReading();
+				return _isRemoteAuth;
+			}
+			set
+			{
+				bool handled = false;
+				OnIsRemoteAuthChanging(ref handled, ref _isRemoteAuth);
+				if (handled == false)
+				{
+					this._isRemoteAuth = value;
+				}
+				OnIsRemoteAuthChanged();
+			}
+		}
+		private System.Boolean _isRemoteAuth;
+		partial void OnIsRemoteAuthReading();
+		partial void OnIsRemoteAuthChanging(ref bool handled, ref System.Boolean _isRemoteAuth);
+		partial void OnIsRemoteAuthChanged();
 		public System.String Origin
 		{
 			get
@@ -998,6 +1020,7 @@ namespace QnSHolidayCalendar.Logic.Entities.Persistence.Account
 				Id = other.Id;
 				Timestamp = other.Timestamp;
 				IdentityId = other.IdentityId;
+				IsRemoteAuth = other.IsRemoteAuth;
 				Origin = other.Origin;
 				Name = other.Name;
 				Email = other.Email;
@@ -1025,11 +1048,11 @@ namespace QnSHolidayCalendar.Logic.Entities.Persistence.Account
 			{
 				return false;
 			}
-			return Id == other.Id && IsEqualsWith(Timestamp, other.Timestamp) && IdentityId == other.IdentityId && IsEqualsWith(Origin, other.Origin) && IsEqualsWith(Name, other.Name) && IsEqualsWith(Email, other.Email) && IsEqualsWith(JsonWebToken, other.JsonWebToken) && IsEqualsWith(SessionToken, other.SessionToken) && LoginTime == other.LoginTime && LastAccess == other.LastAccess && LogoutTime == other.LogoutTime;
+			return Id == other.Id && IsEqualsWith(Timestamp, other.Timestamp) && IdentityId == other.IdentityId && IsRemoteAuth == other.IsRemoteAuth && IsEqualsWith(Origin, other.Origin) && IsEqualsWith(Name, other.Name) && IsEqualsWith(Email, other.Email) && IsEqualsWith(JsonWebToken, other.JsonWebToken) && IsEqualsWith(SessionToken, other.SessionToken) && LoginTime == other.LoginTime && LastAccess == other.LastAccess && LogoutTime == other.LogoutTime;
 		}
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(Id, Timestamp, IdentityId, Origin, Name, Email, HashCode.Combine(JsonWebToken, SessionToken, LoginTime, LastAccess, LogoutTime));
+			return HashCode.Combine(Id, Timestamp, IdentityId, IsRemoteAuth, Origin, Name, HashCode.Combine(Email, JsonWebToken, SessionToken, LoginTime, LastAccess, LogoutTime));
 		}
 	}
 }
