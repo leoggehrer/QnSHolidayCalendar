@@ -2,7 +2,7 @@ namespace QnSHolidayCalendar.Adapters
 {
 	public static partial class Factory
 	{
-		public static Contracts.Client.IAdapterAccess<I> Create<I>() where I : Contracts.IIdentifiable
+		public static Contracts.Client.IAdapterAccess<I> Create<I>()
 		{
 			Contracts.Client.IAdapterAccess<I> result = null;
 			if (Adapter == AdapterType.Controller)
@@ -45,7 +45,7 @@ namespace QnSHolidayCalendar.Adapters
 			}
 			return result;
 		}
-		public static Contracts.Client.IAdapterAccess<I> Create<I>(string sessionToken) where I : Contracts.IIdentifiable
+		public static Contracts.Client.IAdapterAccess<I> Create<I>(string sessionToken)
 		{
 			Contracts.Client.IAdapterAccess<I> result = null;
 			if (Adapter == AdapterType.Controller)

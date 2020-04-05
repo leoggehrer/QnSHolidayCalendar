@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace QnSHolidayCalendar.AspMvc
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -21,6 +21,7 @@ namespace QnSHolidayCalendar.AspMvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            BeginConfigureServices(services);
             var mvcviews = services.AddControllersWithViews();
 
 #if (DEBUG)
@@ -35,11 +36,15 @@ namespace QnSHolidayCalendar.AspMvc
                 options.IdleTimeout = TimeSpan.FromMinutes(20);
             });
             services.AddSingleton<IFactoryWrapper, FactoryWrapper>();
+            EndConfigureServices(services);
         }
+        partial void BeginConfigureServices(IServiceCollection services);
+        partial void EndConfigureServices(IServiceCollection services);
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            BeginConfigure(app, env);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -62,7 +67,10 @@ namespace QnSHolidayCalendar.AspMvc
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            EndConfigure(app, env);
         }
+        partial void BeginConfigure(IApplicationBuilder app, IWebHostEnvironment env);
+        partial void EndConfigure(IApplicationBuilder app, IWebHostEnvironment env);
     }
 }
 //MdEnd

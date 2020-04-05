@@ -90,9 +90,9 @@ namespace QnSHolidayCalendar.Logic.DataContext.Db
             });
         }
 
-        public Task SaveAsync()
+        public Task<int> SaveChangesAsync()
         {
-            return SaveChangesAsync();
+            return base.SaveChangesAsync();
         }
     }
 }

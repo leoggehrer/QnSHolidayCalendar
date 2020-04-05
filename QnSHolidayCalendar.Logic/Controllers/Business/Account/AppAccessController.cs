@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Threading.Tasks;
 using CommonBase.Extensions;
@@ -219,7 +218,7 @@ namespace QnSHolidayCalendar.Logic.Controllers.Business.Account
                 }
                 else
                 {
-                    var qryItem = await roleController.GetByIdAsync(role.Id);
+                    var qryItem = await roleController.GetByIdAsync(role.Id).ConfigureAwait(false);
 
                     if (qryItem != null)
                     {
@@ -252,7 +251,7 @@ namespace QnSHolidayCalendar.Logic.Controllers.Business.Account
         {
             CheckAuthorization(MethodBase.GetCurrentMethod());
 
-            return Context.SaveAsync();
+            return Context.SaveChangesAsync();
         }
         protected override void Dispose(bool disposing)
         {

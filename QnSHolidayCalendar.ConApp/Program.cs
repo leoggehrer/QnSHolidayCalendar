@@ -62,7 +62,7 @@ namespace QnSHolidayCalendar.ConApp
         }
         private static async Task InitAppAccessAsync()
         {
-            await Logic.Modules.Account.AccountManager.InitAppAccess(SaUser, SaEmail, SaPwd, true);
+            await Logic.Modules.Account.AccountManager.InitAppAccessAsync(SaUser, SaEmail, SaPwd, true);
         }
         private static async Task AddAppAccess(string user, string email, string pwd, bool enableJwtAuth, params string[] roles)
         {

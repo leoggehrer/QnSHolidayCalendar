@@ -175,7 +175,7 @@ namespace QnSHolidayCalendar.AspMvc.Models.Business.App
 }
 namespace QnSHolidayCalendar.AspMvc.Models.Business.App
 {
-	partial class HolidayEntry : Models.IdentityModel
+	partial class HolidayEntry : IdentityModel
 	{
 	}
 }
@@ -264,7 +264,7 @@ namespace QnSHolidayCalendar.AspMvc.Models.Business.Account
 }
 namespace QnSHolidayCalendar.AspMvc.Models.Business.Account
 {
-	partial class AppAccess : Models.IdentityModel
+	partial class AppAccess : IdentityModel
 	{
 	}
 }

@@ -176,7 +176,7 @@ namespace QnSHolidayCalendar.Transfer.Business.App
 }
 namespace QnSHolidayCalendar.Transfer.Business.App
 {
-	partial class HolidayEntry : TransferObject
+	partial class HolidayEntry : IdentityModel
 	{
 	}
 }
@@ -268,7 +268,7 @@ namespace QnSHolidayCalendar.Transfer.Business.Account
 }
 namespace QnSHolidayCalendar.Transfer.Business.Account
 {
-	partial class AppAccess : TransferObject
+	partial class AppAccess : IdentityModel
 	{
 	}
 }

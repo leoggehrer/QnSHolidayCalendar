@@ -9,14 +9,14 @@ namespace QnSHolidayCalendar.Logic.Controllers.Persistence.App
 		}
 		static partial void ClassConstructing();
 		static partial void ClassConstructed();
-		public CalendarEntryController(DataContext.IContext context):base(context)
+		internal CalendarEntryController(DataContext.IContext context):base(context)
 		{
 			Constructing();
 			Constructed();
 		}
 		partial void Constructing();
 		partial void Constructed();
-		public CalendarEntryController(ControllerObject controller):base(controller)
+		internal CalendarEntryController(ControllerObject controller):base(controller)
 		{
 			Constructing();
 			Constructed();
@@ -34,14 +34,14 @@ namespace QnSHolidayCalendar.Logic.Controllers.Persistence.Account
 		}
 		static partial void ClassConstructing();
 		static partial void ClassConstructed();
-		public ActionLogController(DataContext.IContext context):base(context)
+		internal ActionLogController(DataContext.IContext context):base(context)
 		{
 			Constructing();
 			Constructed();
 		}
 		partial void Constructing();
 		partial void Constructed();
-		public ActionLogController(ControllerObject controller):base(controller)
+		internal ActionLogController(ControllerObject controller):base(controller)
 		{
 			Constructing();
 			Constructed();
@@ -60,14 +60,14 @@ namespace QnSHolidayCalendar.Logic.Controllers.Persistence.Account
 		}
 		static partial void ClassConstructing();
 		static partial void ClassConstructed();
-		public IdentityController(DataContext.IContext context):base(context)
+		internal IdentityController(DataContext.IContext context):base(context)
 		{
 			Constructing();
 			Constructed();
 		}
 		partial void Constructing();
 		partial void Constructed();
-		public IdentityController(ControllerObject controller):base(controller)
+		internal IdentityController(ControllerObject controller):base(controller)
 		{
 			Constructing();
 			Constructed();
@@ -86,14 +86,14 @@ namespace QnSHolidayCalendar.Logic.Controllers.Persistence.Account
 		}
 		static partial void ClassConstructing();
 		static partial void ClassConstructed();
-		public IdentityXRoleController(DataContext.IContext context):base(context)
+		internal IdentityXRoleController(DataContext.IContext context):base(context)
 		{
 			Constructing();
 			Constructed();
 		}
 		partial void Constructing();
 		partial void Constructed();
-		public IdentityXRoleController(ControllerObject controller):base(controller)
+		internal IdentityXRoleController(ControllerObject controller):base(controller)
 		{
 			Constructing();
 			Constructed();
@@ -112,14 +112,14 @@ namespace QnSHolidayCalendar.Logic.Controllers.Persistence.Account
 		}
 		static partial void ClassConstructing();
 		static partial void ClassConstructed();
-		public LoginSessionController(DataContext.IContext context):base(context)
+		internal LoginSessionController(DataContext.IContext context):base(context)
 		{
 			Constructing();
 			Constructed();
 		}
 		partial void Constructing();
 		partial void Constructed();
-		public LoginSessionController(ControllerObject controller):base(controller)
+		internal LoginSessionController(ControllerObject controller):base(controller)
 		{
 			Constructing();
 			Constructed();
@@ -138,14 +138,14 @@ namespace QnSHolidayCalendar.Logic.Controllers.Persistence.Account
 		}
 		static partial void ClassConstructing();
 		static partial void ClassConstructed();
-		public RoleController(DataContext.IContext context):base(context)
+		internal RoleController(DataContext.IContext context):base(context)
 		{
 			Constructing();
 			Constructed();
 		}
 		partial void Constructing();
 		partial void Constructed();
-		public RoleController(ControllerObject controller):base(controller)
+		internal RoleController(ControllerObject controller):base(controller)
 		{
 			Constructing();
 			Constructed();

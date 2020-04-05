@@ -1,5 +1,7 @@
 //@QnSCodeCopy
 //MdStart
+using QnSHolidayCalendar.Contracts.Modules.Common;
+
 namespace QnSHolidayCalendar.Contracts.Persistence.Account
 {
     public partial interface IIdentity : IIdentifiable, ICopyable<IIdentity>

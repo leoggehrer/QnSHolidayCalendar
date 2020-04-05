@@ -176,7 +176,7 @@ namespace QnSHolidayCalendar.Transfer.Persistence.App
 }
 namespace QnSHolidayCalendar.Transfer.Persistence.App
 {
-	partial class CalendarEntry : TransferObject
+	partial class CalendarEntry : IdentityModel
 	{
 	}
 }
@@ -335,7 +335,7 @@ namespace QnSHolidayCalendar.Transfer.Persistence.Account
 }
 namespace QnSHolidayCalendar.Transfer.Persistence.Account
 {
-	partial class ActionLog : TransferObject
+	partial class ActionLog : IdentityModel
 	{
 	}
 }
@@ -490,7 +490,7 @@ namespace QnSHolidayCalendar.Transfer.Persistence.Account
 		partial void OnAccessFailedCountReading();
 		partial void OnAccessFailedCountChanging(ref bool handled, ref System.Int32 _accessFailedCount);
 		partial void OnAccessFailedCountChanged();
-		public QnSHolidayCalendar.Contracts.State State
+		public QnSHolidayCalendar.Contracts.Modules.Common.State State
 		{
 			get
 			{
@@ -508,9 +508,9 @@ namespace QnSHolidayCalendar.Transfer.Persistence.Account
 				OnStateChanged();
 			}
 		}
-		private QnSHolidayCalendar.Contracts.State _state;
+		private QnSHolidayCalendar.Contracts.Modules.Common.State _state;
 		partial void OnStateReading();
-		partial void OnStateChanging(ref bool handled, ref QnSHolidayCalendar.Contracts.State _state);
+		partial void OnStateChanging(ref bool handled, ref QnSHolidayCalendar.Contracts.Modules.Common.State _state);
 		partial void OnStateChanged();
 		public void CopyProperties(QnSHolidayCalendar.Contracts.Persistence.Account.IIdentity other)
 		{
@@ -540,7 +540,7 @@ namespace QnSHolidayCalendar.Transfer.Persistence.Account
 }
 namespace QnSHolidayCalendar.Transfer.Persistence.Account
 {
-	partial class Identity : TransferObject
+	partial class Identity : IdentityModel
 	{
 	}
 }
@@ -630,7 +630,7 @@ namespace QnSHolidayCalendar.Transfer.Persistence.Account
 }
 namespace QnSHolidayCalendar.Transfer.Persistence.Account
 {
-	partial class IdentityXRole : TransferObject
+	partial class IdentityXRole : IdentityModel
 	{
 	}
 }
@@ -904,7 +904,7 @@ namespace QnSHolidayCalendar.Transfer.Persistence.Account
 }
 namespace QnSHolidayCalendar.Transfer.Persistence.Account
 {
-	partial class LoginSession : TransferObject
+	partial class LoginSession : IdentityModel
 	{
 	}
 }
@@ -994,7 +994,7 @@ namespace QnSHolidayCalendar.Transfer.Persistence.Account
 }
 namespace QnSHolidayCalendar.Transfer.Persistence.Account
 {
-	partial class Role : TransferObject
+	partial class Role : IdentityModel
 	{
 	}
 }

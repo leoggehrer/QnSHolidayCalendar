@@ -39,7 +39,7 @@ namespace QnSHolidayCalendar.Logic.Modules.Account
         internal static readonly List<LoginSession> LoginSessions = new List<LoginSession>();
 
         #region Public logon
-        public static async Task InitAppAccess(string name, string email, string password, bool enableJwtAuth)
+        public static async Task InitAppAccessAsync(string name, string email, string password, bool enableJwtAuth)
         {
             using var appAccessCtrl = new Controllers.Business.Account.AppAccessController(Factory.CreateContext())
             {
@@ -91,7 +91,7 @@ namespace QnSHolidayCalendar.Logic.Modules.Account
                         {
                             SessionToken = Authorization.SystemAuthorizationToken
                         };
-                        var identity = identityCtrl.ExecuteQuery(e => e.State == Contracts.State.Active
+                        var identity = identityCtrl.ExecuteQuery(e => e.State == Contracts.Modules.Common.State.Active
                                                             && e.EnableJwtAuth == true
                                                             && e.Email.ToLower() == email.Value.ToString().ToLower())
                                                    .ToList()
@@ -177,7 +177,7 @@ namespace QnSHolidayCalendar.Logic.Modules.Account
             return await QueryAliveSessionAsync(sessionToken).ConfigureAwait(false);
         }
         [Authorize]
-        public static async Task ChangePassword(string sessionToken, string oldPassword, string newPassword)
+        public static async Task ChangePasswordAsync(string sessionToken, string oldPassword, string newPassword)
         {
             Authorization.CheckAuthorization(sessionToken, MethodBase.GetCurrentMethod());
 
@@ -216,7 +216,7 @@ namespace QnSHolidayCalendar.Logic.Modules.Account
             {
                 SessionToken = sessionToken
             };
-            var identity = identityCtrl.ExecuteQuery(e => e.State == Contracts.State.Active
+            var identity = identityCtrl.ExecuteQuery(e => e.State == Contracts.Modules.Common.State.Active
                                                 && e.AccessFailedCount < 4
                                                 && e.Email.ToLower() == email.ToLower())
                                        .FirstOrDefault();
@@ -246,7 +246,7 @@ namespace QnSHolidayCalendar.Logic.Modules.Account
             {
                 SessionToken = sessionToken
             };
-            var identity = identityCtrl.ExecuteQuery(e => e.State == Contracts.State.Active
+            var identity = identityCtrl.ExecuteQuery(e => e.State == Contracts.Modules.Common.State.Active
                                                 && e.Email.ToLower() == email.ToLower())
                                        .FirstOrDefault();
 
@@ -312,7 +312,7 @@ namespace QnSHolidayCalendar.Logic.Modules.Account
                 {
                     SessionToken = Authorization.SystemAuthorizationToken,
                 };
-                var identity = identityCtrl.ExecuteQuery(e => e.State == Contracts.State.Active
+                var identity = identityCtrl.ExecuteQuery(e => e.State == Contracts.Modules.Common.State.Active
                                                 && e.AccessFailedCount < 4
                                                 && e.Email.ToLower() == email.ToLower()
                                                 && e.PasswordHash == calculatedHash).FirstOrDefault();
@@ -322,7 +322,6 @@ namespace QnSHolidayCalendar.Logic.Modules.Account
                     using var sessionCtrl = new Controllers.Persistence.Account.LoginSessionController(identityCtrl);
                     var session = new LoginSession();
 
-                    session.Identity = identity;
                     session.IdentityId = identity.Id;
                     session.Name = identity.Name;
                     session.Email = identity.Email;
@@ -366,7 +365,7 @@ namespace QnSHolidayCalendar.Logic.Modules.Account
                 {
                     SessionToken = Authorization.SystemAuthorizationToken,
                 };
-                var identity = identityCtrl.ExecuteQuery(e => e.State == Contracts.State.Active
+                var identity = identityCtrl.ExecuteQuery(e => e.State == Contracts.Modules.Common.State.Active
                                                     && e.AccessFailedCount < 4
                                                     && e.Email.ToLower() == email.ToLower()
                                                     && e.PasswordHash == calculatedHash).FirstOrDefault();

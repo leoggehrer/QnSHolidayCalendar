@@ -45,30 +45,6 @@ namespace CSharpCodeGenerator.ConApp.Generation
         partial void CanCreateProperty(Type type, string propertyName, ref bool create);
         partial void CreateEntityAttributes(Type type, List<string> codeLines);
 
-        private IEnumerable<string> CreateEntityFromInterface(Type type)
-        {
-            type.CheckArgument(nameof(type));
-
-            List<string> result = new List<string>();
-            var entityName = CreateEntityNameFromInterface(type);
-
-            CreateEntityAttributes(type, result);
-            result.Add($"partial class {entityName} : {type.FullName}");
-            result.Add("{");
-            result.AddRange(CreatePartialStaticConstrutor(entityName));
-            result.AddRange(CreatePartialConstrutor("public", entityName));
-            foreach (var item in GetPublicProperties(type).Where(p => p.DeclaringType.Name.Equals("IIdentifiable") == false
-                                                                   && CanCreateProperty(type, p.Name)))
-            {
-                result.AddRange(CreatePartialProperty(item));
-            }
-            result.AddRange(CreateCopyProperties(type));
-            result.AddRange(CreateEquals(type));
-            result.AddRange(CreateGetHashCode(type));
-            result.Add("}");
-            return result;
-        }
-
         public IEnumerable<string> CreateModulesEntities()
         {
             List<string> result = new List<string>();
@@ -84,15 +60,16 @@ namespace CSharpCodeGenerator.ConApp.Generation
             }
             return result;
         }
-        private IEnumerable<string> CreateModuleEntity(Type type)
+        private static IEnumerable<string> CreateModuleEntity(Type type)
         {
             type.CheckArgument(nameof(type));
 
-            List<string> result = new List<string>();
-
-            result.Add($"partial class {CreateEntityNameFromInterface(type)} : ModuleObject");
-            result.Add("{");
-            result.Add("}");
+            var result = new List<string>
+            {
+                $"partial class {CreateEntityNameFromInterface(type)} : {GetBaseClassByInterface(type)}",
+                "{",
+                "}"
+            };
             return result;
         }
 
@@ -111,15 +88,16 @@ namespace CSharpCodeGenerator.ConApp.Generation
             }
             return result;
         }
-        private IEnumerable<string> CreateBusinessEntity(Type type)
+        private static IEnumerable<string> CreateBusinessEntity(Type type)
         {
             type.CheckArgument(nameof(type));
 
-            List<string> result = new List<string>();
-
-            result.Add($"partial class {CreateEntityNameFromInterface(type)} : IdentityObject");
-            result.Add("{");
-            result.Add("}");
+            var result = new List<string>
+            {
+                $"partial class {CreateEntityNameFromInterface(type)} : {GetBaseClassByInterface(type)}",
+                "{",
+                "}"
+            };
             return result;
         }
 
@@ -135,6 +113,7 @@ namespace CSharpCodeGenerator.ConApp.Generation
                 {
                     string nameSpace = CreateNameSpace(type);
 
+                    result.Add($"//Entity for: {type.Name}");
                     result.AddRange(EnvelopeWithANamespace(CreateEntityFromInterface(type), nameSpace, "using System;"));
                     result.AddRange(EnvelopeWithANamespace(CreatePersistenceEntity(type), nameSpace));
                     result.AddRange(EnvelopeWithANamespace(CreateEntityToEntityFromContracts(type, persistenceTypes, null), nameSpace));
@@ -142,18 +121,64 @@ namespace CSharpCodeGenerator.ConApp.Generation
             }
             return result;
         }
-        private IEnumerable<string> CreatePersistenceEntity(Type type)
+        private static IEnumerable<string> CreatePersistenceEntity(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            var result = new List<string>
+            {
+                $"partial class {CreateEntityNameFromInterface(type)} : {GetBaseClassByInterface(type)}",
+                "{",
+                "}"
+            };
+            return result;
+        }
+
+        private IEnumerable<string> CreateEntityFromInterface(Type type)
         {
             type.CheckArgument(nameof(type));
 
             List<string> result = new List<string>();
+            var baseItfcs = GetBaseInterfaces(type).ToArray();
+            var entityName = CreateEntityNameFromInterface(type);
+            var properties = GetAllInterfaceProperties(type, baseItfcs);
 
-            result.Add($"partial class {CreateEntityNameFromInterface(type)} : IdentityObject");
+            CreateEntityAttributes(type, result);
+            result.Add($"partial class {entityName} : {type.FullName}");
             result.Add("{");
+            result.AddRange(CreatePartialStaticConstrutor(entityName));
+            result.AddRange(CreatePartialConstrutor("public", entityName));
+            foreach (var item in properties.Where(p => p.DeclaringType.Name.Equals("IIdentifiable") == false
+                                                    && CanCreateProperty(type, p.Name)))
+            {
+                result.AddRange(CreatePartialProperty(item));
+            }
+            result.AddRange(CreateCopyProperties(type));
+            result.AddRange(CreateEquals(type));
+            result.AddRange(CreateGetHashCode(type));
             result.Add("}");
             return result;
         }
+        private static string GetBaseClassByInterface(Type type)
+        {
+            type.CheckArgument(nameof(type));
 
+            var result = string.Empty;
+
+            if (type.FullName.Contains(ContractsProject.BusinessSubName))
+                result = "IdentityObject";
+            else if (type.FullName.Contains(ContractsProject.ModulesSubName))
+                result = HasIdentifiableBase(type) ? "IdentityObject" : "ModuleObject";
+            else if (type.FullName.Contains(ContractsProject.PersistenceSubName))
+                result = "IdentityObject";
+
+            var baseItfc = GetBaseInterface(type);
+            if (baseItfc != null)
+            {
+                result = CreateEntityNameFromInterface(baseItfc);
+            }
+            return result;
+        }
         /// <summary>
         /// Diese Methode erstellt den Programmcode der Beziehungen zwischen den Entitaeten aus den Schnittstellen-Typen.
         /// </summary>
@@ -161,7 +186,7 @@ namespace CSharpCodeGenerator.ConApp.Generation
         /// <param name="types">Die Schnittstellen-Typen.</param>
         /// <param name="mapPropertyName">Ein Lambda-Ausdruck zum konvertieren des Eigenschaftsnamen.</param>
         /// <returns>Die Entitaet als Text.</returns>
-        public static IEnumerable<string> CreateEntityToEntityFromContracts(Type type, IEnumerable<Type> types, Func<string, string> mapPropertyName)
+        private static IEnumerable<string> CreateEntityToEntityFromContracts(Type type, IEnumerable<Type> types, Func<string, string> mapPropertyName)
         {
             type.CheckArgument(nameof(type));
             types.CheckArgument(nameof(types));
@@ -183,7 +208,7 @@ namespace CSharpCodeGenerator.ConApp.Generation
                         var otherFullName = Generator.CreateEntityFullNameFromInterface(other);
                         var propertyName = mapPropertyName != null ? mapPropertyName(otherName + "s") : otherName + "s";
 
-                        result.Add(($"public System.Collections.Generic.ICollection<{otherFullName}> {propertyName} " + "{ get; set; }").SetIndent(1));
+                        result.Add(($"public System.Collections.Generic.ICollection<{otherFullName}> {propertyName} " + "{ get; set; }"));
                     }
                 }
             }
@@ -198,7 +223,7 @@ namespace CSharpCodeGenerator.ConApp.Generation
                         var otherFullName = Generator.CreateEntityFullNameFromInterface(other);
                         var propertyName = mapPropertyName != null ? mapPropertyName(otherName) : otherName;
 
-                        result.Add(($"public {otherFullName} {propertyName} " + "{ get; set; }").SetIndent(1));
+                        result.Add(($"public {otherFullName} {propertyName} " + "{ get; set; }"));
                     }
                 }
             }

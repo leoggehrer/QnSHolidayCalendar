@@ -1,17 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommonBase\CommonBase.csproj" />
     <ProjectReference Include="..\QnSHolidayCalendar.Logic\QnSHolidayCalendar.Logic.csproj" />
     <ProjectReference Include="..\QnSHolidayCalendar.Transfer\QnSHolidayCalendar.Transfer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Customize\" />
   </ItemGroup>
 
 </Project>

@@ -12,6 +12,7 @@ using QnSHolidayCalendar.Logic.DataContext;
 using QnSHolidayCalendar.Logic.Modules.Security;
 using System.Linq.Expressions;
 using QnSHolidayCalendar.Logic.Exceptions;
+using CommonBase.Helpers;
 
 namespace QnSHolidayCalendar.Logic.Controllers
 {
@@ -129,8 +130,8 @@ namespace QnSHolidayCalendar.Logic.Controllers
         }
         internal async virtual Task<IQueryable<I>> ExecuteGetAllAsync()
         {
-            int idx = 0, qryCount = 0;
-            List<I> result = new List<I>();
+            int idx = 0, qryCount;
+            var result = new List<I>();
 
             do
             {
@@ -167,8 +168,8 @@ namespace QnSHolidayCalendar.Logic.Controllers
         }
         internal virtual async Task<IQueryable<I>> ExecuteQueryAllAsync(string predicate)
         {
-            int idx = 0, qryCount = 0;
-            List<I> result = new List<I>();
+            int idx = 0, qryCount;
+            var result = new List<I>();
 
             do
             {
@@ -180,6 +181,10 @@ namespace QnSHolidayCalendar.Logic.Controllers
             return result.AsQueryable();
         }
 
+        internal virtual Task<IQueryable<I>> ExecuteGroupByAsync(string keySelector, string resultSelector)
+        {
+            return Task.FromResult<IQueryable<I>>(Set().GroupBy(keySelector, resultSelector) as IQueryable<I>);
+        }
         public virtual Task<I> CreateAsync()
         {
             CheckAuthorization(GetType(), MethodBase.GetCurrentMethod());
@@ -315,7 +320,7 @@ namespace QnSHolidayCalendar.Logic.Controllers
         internal async Task ExecuteSaveChangesAsync()
         {
             await BeforeSaveChangesAsync().ConfigureAwait(false);
-            await Context.SaveAsync().ConfigureAwait(false);
+            await Context.SaveChangesAsync().ConfigureAwait(false);
             await AfterSaveChangesAsync().ConfigureAwait(false);
         }
         protected virtual Task AfterSaveChangesAsync()
@@ -323,6 +328,21 @@ namespace QnSHolidayCalendar.Logic.Controllers
             return Task.FromResult(0);
         }
         #endregion Async-Methods
+
+        #region Invoke handler
+        public virtual Task InvokeActionAsync(string name, params object[] parameters)
+        {
+            var helper = new InvokeHelper();
+
+            return helper.InvokeActionAsync(this, name, parameters);
+        }
+        public virtual Task<object> InvokeFunctionAsync(string name, params object[] parameters)
+        {
+            var helper = new InvokeHelper();
+
+            return helper.InvokeFunctionAsync(this, name, parameters);
+        }
+        #endregion Invoke handler
 
         #region Internal-Methods
         internal virtual E ExecuteQueryById(int id)

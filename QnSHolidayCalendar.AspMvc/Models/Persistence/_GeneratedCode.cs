@@ -175,7 +175,7 @@ namespace QnSHolidayCalendar.AspMvc.Models.Persistence.App
 }
 namespace QnSHolidayCalendar.AspMvc.Models.Persistence.App
 {
-	partial class CalendarEntry : Models.IdentityModel
+	partial class CalendarEntry : IdentityModel
 	{
 	}
 }
@@ -333,7 +333,7 @@ namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 }
 namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 {
-	partial class ActionLog : Models.IdentityModel
+	partial class ActionLog : IdentityModel
 	{
 	}
 }
@@ -487,7 +487,7 @@ namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 		partial void OnAccessFailedCountReading();
 		partial void OnAccessFailedCountChanging(ref bool handled, ref System.Int32 _accessFailedCount);
 		partial void OnAccessFailedCountChanged();
-		public QnSHolidayCalendar.Contracts.State State
+		public QnSHolidayCalendar.Contracts.Modules.Common.State State
 		{
 			get
 			{
@@ -505,9 +505,9 @@ namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 				OnStateChanged();
 			}
 		}
-		private QnSHolidayCalendar.Contracts.State _state;
+		private QnSHolidayCalendar.Contracts.Modules.Common.State _state;
 		partial void OnStateReading();
-		partial void OnStateChanging(ref bool handled, ref QnSHolidayCalendar.Contracts.State _state);
+		partial void OnStateChanging(ref bool handled, ref QnSHolidayCalendar.Contracts.Modules.Common.State _state);
 		partial void OnStateChanged();
 		public void CopyProperties(QnSHolidayCalendar.Contracts.Persistence.Account.IIdentity other)
 		{
@@ -537,7 +537,7 @@ namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 }
 namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 {
-	partial class Identity : Models.IdentityModel
+	partial class Identity : IdentityModel
 	{
 	}
 }
@@ -626,7 +626,7 @@ namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 }
 namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 {
-	partial class IdentityXRole : Models.IdentityModel
+	partial class IdentityXRole : IdentityModel
 	{
 	}
 }
@@ -899,7 +899,7 @@ namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 }
 namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 {
-	partial class LoginSession : Models.IdentityModel
+	partial class LoginSession : IdentityModel
 	{
 	}
 }
@@ -988,7 +988,7 @@ namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 }
 namespace QnSHolidayCalendar.AspMvc.Models.Persistence.Account
 {
-	partial class Role : Models.IdentityModel
+	partial class Role : IdentityModel
 	{
 	}
 }

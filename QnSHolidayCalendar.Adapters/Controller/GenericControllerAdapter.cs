@@ -2,6 +2,7 @@
 //MdStart
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace QnSHolidayCalendar.Adapters.Controller
@@ -25,10 +26,10 @@ namespace QnSHolidayCalendar.Adapters.Controller
             controller = Logic.Factory.Create<TContract>();
             Constructed();
         }
-        public GenericControllerAdapter(string authenticationToken)
+        public GenericControllerAdapter(string sessionToken)
         {
             Constructing();
-            controller = Logic.Factory.Create<TContract>(authenticationToken);
+            controller = Logic.Factory.Create<TContract>(sessionToken);
             Constructed();
         }
         partial void Constructing();
@@ -76,24 +77,43 @@ namespace QnSHolidayCalendar.Adapters.Controller
 
         public async Task<TContract> InsertAsync(TContract entity)
         {
-            var result = await controller.InsertAsync(entity);
+            var result = await controller.InsertAsync(entity).ConfigureAwait(false);
 
-            await controller.SaveChangesAsync();
+            await controller.SaveChangesAsync().ConfigureAwait(false);
             return result;
         }
 
         public async Task<TContract> UpdateAsync(TContract entity)
         {
-            var result = await controller.UpdateAsync(entity);
+            var result = await controller.UpdateAsync(entity).ConfigureAwait(false);
 
-            await controller.SaveChangesAsync();
+            await controller.SaveChangesAsync().ConfigureAwait(false);
             return result;
         }
 
         public async Task DeleteAsync(int id)
         {
-            await controller.DeleteAsync(id);
-            await controller.SaveChangesAsync();
+            await controller.DeleteAsync(id).ConfigureAwait(false);
+            await controller.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public Task InvokeActionAsync(string name, params object[] parameters)
+        {
+            return controller.InvokeActionAsync(name, parameters);
+        }
+
+        public async Task<TResult> InvokeFunctionAsync<TResult>(string name, params object[] parameters)
+        {
+            var result = default(TResult);
+            var invokeResult = await controller.InvokeFunctionAsync(name, parameters).ConfigureAwait(false);
+
+            if (invokeResult != null)
+            {
+                var json = JsonSerializer.Serialize(invokeResult);
+
+                result = JsonSerializer.Deserialize<TResult>(json);
+            }
+            return result;
         }
         #endregion Async-Methods
 

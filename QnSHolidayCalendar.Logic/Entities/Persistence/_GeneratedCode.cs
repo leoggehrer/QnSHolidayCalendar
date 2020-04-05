@@ -547,7 +547,7 @@ namespace QnSHolidayCalendar.Logic.Entities.Persistence.Account
 		partial void OnAccessFailedCountReading();
 		partial void OnAccessFailedCountChanging(ref bool handled, ref System.Int32 _accessFailedCount);
 		partial void OnAccessFailedCountChanged();
-		public QnSHolidayCalendar.Contracts.State State
+		public QnSHolidayCalendar.Contracts.Modules.Common.State State
 		{
 			get
 			{
@@ -565,9 +565,9 @@ namespace QnSHolidayCalendar.Logic.Entities.Persistence.Account
 				OnStateChanged();
 			}
 		}
-		private QnSHolidayCalendar.Contracts.State _state;
+		private QnSHolidayCalendar.Contracts.Modules.Common.State _state;
 		partial void OnStateReading();
-		partial void OnStateChanging(ref bool handled, ref QnSHolidayCalendar.Contracts.State _state);
+		partial void OnStateChanging(ref bool handled, ref QnSHolidayCalendar.Contracts.Modules.Common.State _state);
 		partial void OnStateChanged();
 		public void CopyProperties(QnSHolidayCalendar.Contracts.Persistence.Account.IIdentity other)
 		{

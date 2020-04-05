@@ -3,12 +3,15 @@
 using System;
 using System.Reflection;
 using CommonBase.Extensions;
-using System.Threading.Tasks;
 using QnSHolidayCalendar.Logic.DataContext;
 using QnSHolidayCalendar.Logic.Modules.Security;
 
 namespace QnSHolidayCalendar.Logic.Controllers
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// This is the base class for all controller classes.
+    /// </summary>
     internal abstract partial class ControllerObject : IDisposable
     {
         static ControllerObject()
@@ -41,8 +44,7 @@ namespace QnSHolidayCalendar.Logic.Controllers
 
         protected ControllerObject(IContext context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            context.CheckArgument(nameof(context));
 
             Constructing();
             contextDispose = true;
@@ -51,8 +53,7 @@ namespace QnSHolidayCalendar.Logic.Controllers
         }
         protected ControllerObject(ControllerObject controller)
         {
-            if (controller == null)
-                throw new ArgumentNullException(nameof(controller));
+            controller.CheckArgument(nameof(controller));
 
             Constructing();
             contextDispose = false;

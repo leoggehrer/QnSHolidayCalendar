@@ -10,6 +10,8 @@ namespace CSharpCodeGenerator.ConApp.Generation
 {
     partial class ClassGenerator : Generator
     {
+        public const string DelegatePropertyName = "DelegateObject";
+
         protected ClassGenerator(SolutionProperties solutionProperties)
             : base(solutionProperties)
         {
@@ -61,7 +63,6 @@ namespace CSharpCodeGenerator.ConApp.Generation
             lines.Add(string.Empty);
             return lines;
         }
-
         public static IEnumerable<string> CreatePartialConstrutor(string visibility, string className, string argumentList = null, string baseConstructor = null, IEnumerable<string> initStatements = null, bool withPartials = true)
         {
             var lines = new List<string>
@@ -70,22 +71,22 @@ namespace CSharpCodeGenerator.ConApp.Generation
             };
 
             if (string.IsNullOrEmpty(baseConstructor) == false)
-                lines.Add($":{baseConstructor}".SetIndent(1));
+                lines.Add($":{baseConstructor}");
 
             lines.Add("{");
-            lines.Add("Constructing();".SetIndent(1));
+            lines.Add("Constructing();");
             if (initStatements != null)
             {
                 foreach (var item in initStatements)
                 {
-                    lines.Add($"{item}".SetIndent(1));
+                    lines.Add($"{item}");
                 }
             }
             else
             {
                 lines.Add(string.Empty);
             }
-            lines.Add($"Constructed();".SetIndent(1));
+            lines.Add($"Constructed();");
             lines.Add("}");
             if (withPartials)
             {
@@ -149,11 +150,11 @@ namespace CSharpCodeGenerator.ConApp.Generation
             var fieldName = CreateFieldName(propertyInfo, "_");
 
             SetPropertyGetAttributes(propertyInfo.DeclaringType, propertyInfo, result);
-            result.Add("get".SetIndent(1));
-            result.Add("{".SetIndent(1));
-            result.Add($"On{propertyInfo.Name}Reading();".SetIndent(2));
-            result.Add($"return {fieldName};".SetIndent(2));
-            result.Add("}".SetIndent(1));
+            result.Add("get");
+            result.Add("{");
+            result.Add($"On{propertyInfo.Name}Reading();");
+            result.Add($"return {fieldName};");
+            result.Add("}");
             return result;
         }
         /// <summary>
@@ -171,28 +172,110 @@ namespace CSharpCodeGenerator.ConApp.Generation
 
             SetPropertySetAttributes(propertyInfo.DeclaringType, propertyInfo, result);
 
-            result.Add("set".SetIndent(1));
-            result.Add("{".SetIndent(1));
-            result.Add("bool handled = false;".SetIndent(2));
-            result.Add($"On{propName}Changing(ref handled, ref {fieldName});".SetIndent(2));
-            result.Add("if (handled == false)".SetIndent(2));
-            result.Add("{".SetIndent(2));
-            result.Add($"this.{fieldName} = value;".SetIndent(3));
-            result.Add("}".SetIndent(2));
-            result.Add($"On{propName}Changed();".SetIndent(2));
-            result.Add("}".SetIndent(1));
+            result.Add("set");
+            result.Add("{");
+            result.Add("bool handled = false;");
+            result.Add($"On{propName}Changing(ref handled, ref {fieldName});");
+            result.Add("if (handled == false)");
+            result.Add("{");
+            result.Add($"this.{fieldName} = value;");
+            result.Add("}");
+            result.Add($"On{propName}Changed();");
+            result.Add("}");
             return result.ToArray();
         }
         #endregion Create partial properties
 
-        #region CreateCopyProperties
+        #region Delegate property helpers
+        /// <summary>
+        /// Diese Methode erstellt den Programmcode einer Eigenschaft aus dem Eigenschaftsinfo-Objekt.
+        /// </summary>
+        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
+        /// <returns>Die Eigenschaft als Text.</returns>
+        internal static IEnumerable<string> CreatePartialDelegateProperty(PropertyInfo propertyInfo)
+        {
+            propertyInfo.CheckArgument(nameof(propertyInfo));
+
+            var result = new List<string>();
+            var propName = propertyInfo.Name;
+            var fieldType = Generator.GetPropertyType(propertyInfo);
+
+            result.Add($"public {fieldType} {propName}");
+            result.Add("{");
+            if (propertyInfo.CanRead)
+            {
+                result.AddRange(CreatePartialGetDelegateProperty(propertyInfo));
+            }
+            if (propertyInfo.CanWrite)
+            {
+                result.AddRange(CreatePartialSetDelegateProperty(propertyInfo));
+            }
+            result.Add("}");
+
+            if (propertyInfo.CanRead)
+            {
+                result.Add($"partial void On{propName}Reading();");
+            }
+            if (propertyInfo.CanWrite)
+            {
+                result.Add($"partial void On{propName}Changed();");
+            }
+            return result;
+        }
+        /// <summary>
+        /// Diese Methode erstellt den Programmcode einer Getter-Eigenschaft und leitet diese an das Delegate-Objekt weiter.
+        /// </summary>
+        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
+        /// <returns>Die Getter-Eigenschaft als Text.</returns>
+        internal static IEnumerable<string> CreatePartialGetDelegateProperty(PropertyInfo propertyInfo)
+        {
+            propertyInfo.CheckArgument(nameof(propertyInfo));
+
+            var result = new List<string>
+            {
+                "get".SetIndent(1),
+                "{".SetIndent(1),
+                $"On{propertyInfo.Name}Reading();".SetIndent(2),
+                $"return {DelegatePropertyName}.{propertyInfo.Name};".SetIndent(2),
+                "}".SetIndent(1)
+            };
+            return result;
+        }
+        /// <summary>
+        /// Diese Methode erstellt den Programmcode einer Setter-Eigenschaft und leitet diese an das Delegate-Objekt weiter.
+        /// </summary>
+        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
+        /// <returns>Die Setter-Eigenschaft als Text.</returns>
+        internal static IEnumerable<string> CreatePartialSetDelegateProperty(PropertyInfo propertyInfo)
+        {
+            propertyInfo.CheckArgument(nameof(propertyInfo));
+
+            var result = new List<string>
+            {
+                "set".SetIndent(1),
+                "{".SetIndent(1),
+                $"{DelegatePropertyName}.{propertyInfo.Name} = value;".SetIndent(2),
+                $"On{propertyInfo.Name}Changed();".SetIndent(2),
+                "}".SetIndent(1)
+            };
+            return result;
+        }
+        #endregion Delegate property helpers
+
+        #region CopyProperties
         internal static IEnumerable<string> CreateCopyProperties(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return CreateCopyProperties(type, type.FullName);
+        }
+        internal static IEnumerable<string> CreateCopyProperties(Type type, string copyType)
         {
             type.CheckArgument(nameof(type));
 
             var result = new List<string>
             {
-                $"public void CopyProperties({type.FullName} other)",
+                $"public void CopyProperties({copyType} other)",
                 "{",
                 "if (other == null)",
                 "{",
@@ -200,7 +283,7 @@ namespace CSharpCodeGenerator.ConApp.Generation
                 "}",
                 string.Empty,
                 "bool handled = false;",
-                $"BeforeCopyProperties(other, ref handled);",
+                "BeforeCopyProperties(other, ref handled);",
                 "if (handled == false)",
                 "{",
             };
@@ -208,19 +291,54 @@ namespace CSharpCodeGenerator.ConApp.Generation
             {
                 if (item.CanRead)
                 {
-                    result.Add($"{item.Name} = other.{item.Name};".SetIndent(2));
+                    result.Add($"{item.Name} = other.{item.Name};");
                 }
             }
             result.Add("}");
             result.Add("AfterCopyProperties(other);");
             result.Add("}");
 
-            result.Add($"partial void BeforeCopyProperties({type.FullName} other, ref bool handled);");
-            result.Add($"partial void AfterCopyProperties({type.FullName} other);");
+            result.Add($"partial void BeforeCopyProperties({copyType} other, ref bool handled);");
+            result.Add($"partial void AfterCopyProperties({copyType} other);");
 
             return result;
         }
-        #endregion CreateCopyProperties
+        internal static IEnumerable<string> CreateDelegateCopyProperties(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return CreateDelegateCopyProperties(type, type.FullName);
+        }
+        internal static IEnumerable<string> CreateDelegateCopyProperties(Type type, string copyType)
+        {
+            type.CheckArgument(nameof(type));
+
+            var result = new List<string>
+            {
+                $"public void CopyProperties({copyType} other)",
+                "{",
+                "if (other == null)",
+                "{",
+                "throw new System.ArgumentNullException(nameof(other));",
+                "}",
+                string.Empty,
+                "bool handled = false;",
+                "BeforeCopyProperties(other, ref handled);",
+                "if (handled == false)",
+                "{",
+            };
+            result.Add($"{ClassGenerator.DelegatePropertyName}.CopyProperties(other as {type.FullName});");
+            result.Add("}");
+            result.Add("AfterCopyProperties(other);");
+            result.Add("}");
+
+            result.Add($"partial void BeforeCopyProperties({copyType} other, ref bool handled);");
+            result.Add($"partial void AfterCopyProperties({copyType} other);");
+
+            return result;
+        }
+        #endregion CopyProperties
+
         /// <summary>
         /// Diese Methode erstellt den Programmcode fuer das Vergleichen der Eigenschaften.
         /// </summary>
@@ -234,19 +352,19 @@ namespace CSharpCodeGenerator.ConApp.Generation
             {
                 $"public override bool Equals(object obj)",
                 "{",
-                $"if (!(obj is {type.FullName} instance))".SetIndent(1),
-                "{".SetIndent(1),
-                "return false;".SetIndent(2),
-                "}".SetIndent(1),
-                "return base.Equals(instance) && Equals(instance);".SetIndent(1),
+                $"if (!(obj is {type.FullName} instance))",
+                "{",
+                "return false;",
+                "}",
+                "return base.Equals(instance) && Equals(instance);",
                 "}",
                 string.Empty,
                 $"protected bool Equals({type.FullName} other)",
                 "{",
-                "if (other == null)".SetIndent(1),
-                "{".SetIndent(1),
-                "return false;".SetIndent(2),
-                "}".SetIndent(1)
+                "if (other == null)",
+                "{",
+                "return false;",
+                "}"
             };
 
             var counter = 0;
@@ -255,7 +373,7 @@ namespace CSharpCodeGenerator.ConApp.Generation
             {
                 if (pi.CanRead)
                 {
-                    var codeLine = counter == 0 ? "return ".SetIndent(1) : "       && ".SetIndent(1);
+                    var codeLine = counter == 0 ? "return " : "       && ";
 
                     if (pi.PropertyType.GetTypeInfo().IsValueType)
                     {
@@ -271,11 +389,11 @@ namespace CSharpCodeGenerator.ConApp.Generation
             }
             if (counter > 0)
             {
-                result[result.Count - 1] = $"{result[result.Count - 1]};";
+                result[^1] = $"{result[^1]};";
             }
             else
             {
-                result.Add("return true;".SetIndent(1));
+                result.Add("return true;");
             }
             result.Add("}");
             return result.ToArray();
@@ -328,11 +446,11 @@ namespace CSharpCodeGenerator.ConApp.Generation
 
             if (counter > 0)
             {
-                result.Add($"return {codeLine};".SetIndent(1));
+                result.Add($"return {codeLine};");
             }
             else
             {
-                result.Add($"return base.GetHashCode();".SetIndent(1));
+                result.Add($"return base.GetHashCode();");
             }
             result.Add("}");
             return result.ToArray();
